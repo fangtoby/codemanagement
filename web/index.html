@@ -8,10 +8,28 @@
 			<div class="section searchbox">
 				<div class="searchbax-bar">
 					<label>Search</label>
-					<input type="text" />
+					<input type="text" id="search-box" />
 				</div>
 			</div>
 		</div>
 		<script type="text/javascript" src="js/main.js"></script>
+		<script type="text/javascript">
+				yomi.config = {
+					modules: {
+						jQuery: 'http://code.jquery.com/jquery-latest.js',
+						test: 'js/test.js',
+						loading: 'js/loading.js'
+					}
+				}
+				document.onreadystatechange = function() {
+					log(document.readyState)
+					if (document.readyState == 'complete') {
+						yomi.use('loading', function() {
+							console.log(yomi.modules)
+							
+						})
+					}
+				}
+		</script>
 	</body>
 </html>

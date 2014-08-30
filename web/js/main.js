@@ -1,78 +1,170 @@
-var modules = {},
-	index = 0
+(function(global) {
+	/*
+	 * var modules = {
+	 *	name : {
+	 *		module : module,
+	 *		status : 0 [unload], 1 [loaded,currect], 2 [loaded,error]
+	 *	}
+	 *}
+	 */
+	var yomi = global.yomi = {
+		version: '0.1',
+		status: 0,
+		modules: {
+			//
+		},
+		config: {
+			preload: 'text',
+			modules: {
 
-function isObject(obj) {
-	return typeof(obj) == 'object'
-}
+			},
+			_modules: {
 
-function isString(str) {
-	return typeof(str) == 'string'
-}
+			}
+		},
+		beforeUse: function(callback) {
+			var self = this,
+				load = require('load'),
+				config = self.config,
+				_modules = config.modules
 
-function isFunction(obj) {
-	return typeof(obj) == 'function'
-}
+			load.get(_modules, callback)
+		},
+		use: function(name, callback) {
+			var self = this
 
-function isUndefined(obj) {
-	return typeof(obj) == 'undefined'
-}
-
-function log(msg) {
-	console.log(msg)
-}
-
-function err(msg) {
-	alert(msg)
-}
-
-function defined(name, obj) {
-	if (isFunction(obj) && isString(name)) {
-		modules[name] = obj
-	} else {
-		err('argument error.')
-	}
-}
-
-function require(name) {
-	if (!isUndefined(name) && !isUndefined(modules[name])) {
-		return modules[name](require)
-	}
-}
-
-defined('test', function() {
-	var test = {
-		init: function(argument) {
-			log('test start ...')
+			self.beforeUse(function() {
+				log('all loaded.')
+				if (isString(name) && !isUndefined(name)) {
+					self.modules[name].module(require)
+				}
+				callback()
+			})
 		}
 	}
-	return test
-})
+	var modules = yomi.modules
+	var confg = yomi.config
 
-defined('loading', function(require) {
+	/*
+	 * Util
+	 */
 
-	var test = require('test')
+	function isObject(obj) {
+		return typeof(obj) == 'object'
+	}
 
-	var loading = {
-		init: function(argument) {
+	function isString(str) {
+		return typeof(str) == 'string'
+	}
 
-			test.init()
+	function isFunction(obj) {
+		return typeof(obj) == 'function'
+	}
 
-			log('loading start...')
+	function isUndefined(obj) {
+		return typeof(obj) == 'undefined'
+	}
+
+	function log(msg) {
+		console.log(msg)
+	}
+
+	function err(msg) {
+		alert(msg)
+	}
+
+	function isEmptyObject(obj) {
+		for (var name in obj) {
+			return false
+		}
+		return true
+	}
+	/*
+	 * core
+	 */
+	yomi.defined = function(name, obj) {
+		if (isFunction(obj) && isString(name)) {
+			modules[name] = {}
+			modules[name].module = obj
+			modules[name].status = 1
+		} else {
+			err('argument error.')
 		}
 	}
-	loading.init()
-})
 
-window.yomi = yomi = {}
+	global.defined = defined = yomi.defined
 
-yomi = {
-	use: function(name) {
-		if (isString(name) && !isUndefined(name)) {
-			modules[name](require)
+	function require(name) {
+		if (!isUndefined(name) && !isUndefined(modules[name])) {
+			if (modules[name].status == 1) {
+				return modules[name].module(require)
+			} else {
+				err('module unload')
+			}
 		}
 	}
-}
+	/*
+	 * core modules
+	 */
+	defined('load', function(require) {
+		var load = {
+			get: function(arrModule, callback) {
 
-yomi.use('loading')
+				var self = this,
+					tempModules = arrModule
 
-console.log(modules)
+				for (var module in arrModule) {
+					log('index:' + module)
+					self._get(arrModule[module], function(uri) {
+						log(uri + ':>loaded')
+						for (var _module in tempModules) {
+							if (tempModules[_module] == uri) {
+								delete tempModules[_module]
+								if (isEmptyObject(tempModules)) {
+									callback()
+								}
+							}
+						}
+					})
+				}
+			},
+			removeDom: function(_element) {
+				var _parentElement = _element.parentNode
+				if (_parentElement) {
+					_parentElement.removeChild(_element)
+				}
+			},
+			_get: function(uri, callback) {
+				var self = this
+				var _doc = document.getElementsByTagName('head')[0]
+				var js = document.createElement('script')
+				js.setAttribute('type', 'text/javascript')
+				js.setAttribute('src', uri)
+				_doc.appendChild(js)
+
+				if (! /*@cc_on!@*/ 0) { //if not IE
+					//Firefox2、Firefox3、Safari3.1+、Opera9.6+ support js.onload
+					js.onload = function() {
+						//log('Firefox2、Firefox3、Safari3.1+、Opera9.6+ support js.onload')
+						callback(uri)
+					}
+				} else {
+					//IE6、IE7 support js.onreadystatechange
+					js.onreadystatechange = function() {
+						if (js.readyState == 'loaded' || js.readyState == 'complete') {
+							//log('IE6、IE7 support js.onreadystatechange')
+							callback(uri)
+							self.removeDom(js)
+						}
+					}
+				}
+				return true
+			}
+		}
+		return load
+	})
+
+
+	global.log = log
+
+})(this)
