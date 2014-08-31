@@ -92,7 +92,7 @@
 		}
 	}
 
-	global.defined = defined = yomi.defined
+	var defined = global.defined  = yomi.defined
 
 	function require(name) {
 		if (!isUndefined(name) && !isUndefined(modules[name])) {
@@ -141,12 +141,12 @@
 				js.setAttribute('type', 'text/javascript')
 				js.setAttribute('src', uri)
 				_doc.appendChild(js)
-
 				if (! /*@cc_on!@*/ 0) { //if not IE
 					//Firefox2、Firefox3、Safari3.1+、Opera9.6+ support js.onload
 					js.onload = function() {
 						//log('Firefox2、Firefox3、Safari3.1+、Opera9.6+ support js.onload')
 						callback(uri)
+						self.removeDom(js)
 					}
 				} else {
 					//IE6、IE7 support js.onreadystatechange

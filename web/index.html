@@ -18,7 +18,8 @@
 					modules: {
 						jQuery: 'http://code.jquery.com/jquery-latest.js',
 						test: 'js/test.js',
-						loading: 'js/loading.js'
+						loading: 'js/loading.js',
+						url : 'js/url.js'
 					}
 				}
 				document.onreadystatechange = function() {
@@ -26,7 +27,6 @@
 					if (document.readyState == 'complete') {
 						yomi.use('loading', function() {
 							console.log(yomi.modules)
-							
 						})
 					}
 				}
