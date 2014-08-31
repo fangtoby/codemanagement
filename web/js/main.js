@@ -14,6 +14,7 @@
 			//
 		},
 		config: {
+			debug: false,
 			preload: 'text',
 			modules: {
 
@@ -43,7 +44,6 @@
 		}
 	}
 	var modules = yomi.modules
-	var confg = yomi.config
 
 	/*
 	 * Util
@@ -130,7 +130,7 @@
 			},
 			removeDom: function(_element) {
 				var _parentElement = _element.parentNode
-				if (_parentElement) {
+				if (_parentElement && !yomi.config.debug) {
 					_parentElement.removeChild(_element)
 				}
 			},
