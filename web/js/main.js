@@ -92,7 +92,7 @@
 		}
 	}
 
-	var defined = global.defined  = yomi.defined
+	var defined = global.defined = yomi.defined
 
 	function require(name) {
 		if (!isUndefined(name) && !isUndefined(modules[name])) {
@@ -140,7 +140,9 @@
 				var js = document.createElement('script')
 				js.setAttribute('type', 'text/javascript')
 				js.setAttribute('src', uri)
+				js.setAttribute('async', true)
 				_doc.appendChild(js)
+
 				if (! /*@cc_on!@*/ 0) { //if not IE
 					//Firefox2、Firefox3、Safari3.1+、Opera9.6+ support js.onload
 					js.onload = function() {
@@ -148,9 +150,13 @@
 						callback(uri)
 						self.removeDom(js)
 					}
+					js.onerror = function() {
+						err(uri + ',can"t be loaded.')
+					}
 				} else {
 					//IE6、IE7 support js.onreadystatechange
 					js.onreadystatechange = function() {
+						log(js.readyState)
 						if (js.readyState == 'loaded' || js.readyState == 'complete') {
 							//log('IE6、IE7 support js.onreadystatechange')
 							callback(uri)
