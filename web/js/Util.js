@@ -176,5 +176,113 @@ var Tools = {
         return 0;
       }
     }
-  }
+  },
+  /*
+  * String Find (子字符串查找 | 子字符串匹配)
+  * @return (true,false)
+  * @date 2014/09/02 09/48/48
+  */
+  hasClass: function(classAll,classTarget){
+    var classAll= classAll || '';
+		var classArray = classAll.split(/\s/g);
+		for(var i=0,total=classArray.length;i<total;i++){
+			if(classArray[i] == classTarget){
+				return true;
+			}
+		}
+		return false;
+  },
+  /*
+  * String replace (字符串替换 | 字符串匹配)
+  * @return string
+  * @date 2014/09/02 09/48/48
+  */
+  render: function(tpl,data){
+		var txt = '';
+		for(var i=0 in data){
+			txt += tpl.replace(/{(.*?)}/g,function(a,b){
+				//var key = arguments[1];
+				return data[i][b] || '';
+			});
+		}
+		return txt;                 
+	},
+	/*
+  * 连续点击事件 解决方案
+  *
+  * @target 2 (解决方案)
+  * @date 2014/09/02 09/48/48
+  */
+	avoidTimer:null,
+	avoidRepeatEvent: function(){
+	  var self = this;
+	  if(self.avoidTimer != null){
+				clearTimeout(self.avoidTimer);
+		}
+		self.avoidTimer = setTimeout(function(){
+		  //content
+		},300);
+	},
+	/*
+  * 改变dom内数字
+  *
+  * @target 1 (功能性方法)
+  * @date 2014/09/02 09/48/48
+  */
+	changeCountElement : function($this,type){
+			$this.each(function(index, element) {
+					var _this = $(this);
+					var beforeValue = _this.html();
+					if(type == '+' || typeof(type) == 'undefined'){
+						++beforeValue;
+					}else{
+						--beforeValue;
+					}
+					_this.html(beforeValue);
+			});
+	},
+	/*
+  * Ajax 复合型工具方法
+  *
+  * @target 1 (功能性方法)
+  * @date 2014/09/02 09/48/48
+  */
+	ajaxCenter : function(url,type,data,success,failure){
+				$.ajax({
+					'url' : url,
+					'type' : type || 'GET',
+					'data' : data,
+					'dataType' : 'json',
+					'success' : function(d){
+						if(d && d.code ==200){
+							success && success(d);
+						}else{
+							success && success(d.message);
+						}
+					},
+					'error' : function(){
+						failure && failure('请求失败');
+					}
+				});	
+	},
+	/*
+  * dom 动画
+  *
+  * @target 1 (功能性方法)
+  * @date 2014/09/02 09/48/48
+  */
+	flyNum:function(txt,offset,toSize){
+				var aniDom = $('<div class="fly_num">' + txt + '</div>');
+				aniDom.css({
+					'top' : offset.top,
+					'left' : offset.left+15
+				});
+				$('body').append(aniDom);
+				aniDom.animate({
+					'top' : offset.top + toSize,
+					'opacity' : 0
+				},1000,function(){
+					aniDom.remove();
+				});
+	}
 };
