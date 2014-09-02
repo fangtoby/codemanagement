@@ -103,6 +103,9 @@
 			}
 		}
 	}
+	
+	var exports = global.exports = yomi.config.modules
+	
 	/*
 	 * core modules
 	 */
