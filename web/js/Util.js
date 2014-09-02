@@ -184,13 +184,13 @@ var Tools = {
   */
   hasClass: function(classAll,classTarget){
     var classAll= classAll || '';
-		var classArray = classAll.split(/\s/g);
-		for(var i=0,total=classArray.length;i<total;i++){
-			if(classArray[i] == classTarget){
-				return true;
-			}
+	var classArray = classAll.split(/\s/g);
+	for(var i=0,total=classArray.length;i<total;i++){
+		if(classArray[i] == classTarget){
+			return true;
 		}
-		return false;
+	}
+	return false;
   },
   /*
   * String replace (字符串替换 | 字符串匹配)
@@ -198,7 +198,7 @@ var Tools = {
   * @date 2014/09/02 09/48/48
   */
   render: function(tpl,data){
-		var txt = '';
+	var txt = '';
 		for(var i=0 in data){
 			txt += tpl.replace(/{(.*?)}/g,function(a,b){
 				//var key = arguments[1];
@@ -206,8 +206,8 @@ var Tools = {
 			});
 		}
 		return txt;                 
-	},
-	/*
+  },
+  /*
   * 连续点击事件 解决方案
   *
   * @target 2 (解决方案)
@@ -234,12 +234,20 @@ var Tools = {
 					var _this = $(this);
 					var beforeValue = _this.html();
 					if(type == '+' || typeof(type) == 'undefined'){
-						++beforeValue;
+						if(typeof(number) != 'undefined'){
+							beforeValue += number;
+						}else{
+							++beforeValue;	
+						}
 					}else{
-						--beforeValue;
+						if(typeof(number) != 'undefined'){
+							beforeValue -= number;
+						}else{
+							--beforeValue;	
+						}
 					}
 					_this.html(beforeValue);
-			});
+				});
 	},
 	/*
   * Ajax 复合型工具方法
@@ -284,5 +292,251 @@ var Tools = {
 				},1000,function(){
 					aniDom.remove();
 				});
+	},
+	/*
+  * 定制时间格式修改
+  *
+  * @target 1 (功能性方法)
+  * @date 2014/09/02 09/48/48
+  */
+	modifyCreateTime:function(createTime){
+			var d;
+			if(createTime){
+				d=createTime.replace(/-/g,'/');
+			}else{
+				return "";
+			}
+			var d=createTime.replace(/-/g,'/');
+			var getD = new Date(d).getTime();
+			var nowD = new Date().getTime();
+			var differ = nowD-getD,int_day;
+			if(differ>0){
+				int_day=Math.floor(differ/86400000);
+				if(int_day>0){  //more than one day
+					return createTime.substring(5,10);
+				}else if(Math.floor(differ/3600000)>0){
+					return Math.floor(differ/3600000)+'小时前';
+				}
+				var time;
+				if(Math.floor(differ/60000)==0){
+					time=1;
+				}else{
+					time=Math.floor(differ/60000);
+				}
+				return time+'分钟前';
+			}else{
+				return '1分钟前';
+			}
+	},
+	/*
+  * 字符串转数字
+  *
+  * @target 1 (功能性方法)
+  * @date 2014/09/02 09/48/48
+  */
+	toInt : function(string, number) {
+				number = number || 0;
+				return string ? parseInt(string, 10) + number : 0;
+	},
+	/*
+  * 数字向上取整
+  *
+  * @target 1 (功能性方法)
+  * @date 2014/09/02 09/48/48
+  */
+	intToupper: function(double){
+		return  Math.ceil(double);
+	},
+	/*
+  * 数字向下取整
+  *
+  * @target 1 (功能性方法)
+  * @date 2014/09/02 09/48/48
+  */
+	intToLower: function(double){
+		return parseInt(double);
+	},
+	/*
+  * 数组转字符串
+  *
+  * @target 1 (功能性方法)
+  * @date 2014/09/02 09/48/48
+  */
+	arrayToString: function(arr, splitStr){
+		var _splitStr = '';
+		if(typeof(splitStr) != 'undefined'){
+			_splitStr = splitStr;
+		}
+		return arr.join(_splitStr);
+	},
+	/*
+  * 字符转小写
+  *
+  * @target 1 (功能性方法)
+  * @date 2014/09/02 09/48/48
+  */
+	toLowerCase: function(str){
+		if(typeof(str) == 'string'){
+			return str.toLowerCase();
+		}
+	},
+	/*
+  * 字符转大写
+  *
+  * @target 1 (功能性方法)
+  * @date 2014/09/02 09/48/48
+  */
+	toUpperCase: function(str){
+		if(typeof(str) == 'string'){
+			return str.toUpperCase();
+		}
+	},
+	/*
+  * 返回所有字母大写合集
+  *
+  * @target 1 (功能性方法)
+  * @date 2014/09/02 09/48/48
+  */
+	allCharList: function(){
+		var charList = [];
+		for ( var i = 65; i <= 90; i++) {
+				charList.push(String.fromCharCode(i));
+		}
+		return charList;
+	},
+	/*
+  * window窗口变化 触发事件入口
+  *
+  * @target 1 (功能性方法)
+  * @date 2014/09/02 09/48/48
+  */
+	setResize : function() {
+			var self = this;
+			$(window).resize(function() {
+				//code
+			});
+	},
+	/*
+  * 鼠标移动位置获取接口
+  *
+  * @target 1 (功能性方法)
+  * @date 2014/09/02 09/48/48
+  */
+	getMousePosition: function(){
+			$(document).mousemove(function(event) {
+					return{
+							'left' : event.pageX,
+							'top' : event.pageY
+					};
+			}).mouseup(function() {
+				//
+			});
+	},
+	in_array : function(needle, haystack, argStrict) {
+			  //  discuss at: http://phpjs.org/functions/in_array/
+			  // original by: Kevin van Zonneveld (http://kevin.vanzonneveld.net)
+			  // improved by: vlado houba
+			  // improved by: Jonas Sciangula Street (Joni2Back)
+			  //    input by: Billy
+			  // bugfixed by: Brett Zamir (http://brett-zamir.me)
+			  //   example 1: in_array('van', ['Kevin', 'van', 'Zonneveld']);
+			  //   returns 1: true
+			  //   example 2: in_array('vlado', {0: 'Kevin', vlado: 'van', 1: 'Zonneveld'});
+			  //   returns 2: false
+			  //   example 3: in_array(1, ['1', '2', '3']);
+			  //   example 3: in_array(1, ['1', '2', '3'], false);
+			  //   returns 3: true
+			  //   returns 3: true
+			  //   example 4: in_array(1, ['1', '2', '3'], true);
+			  //   returns 4: false
+			  var key = '',
+			    strict = !! argStrict;
+			  //we prevent the double check (strict && arr[key] === ndl) || (!strict && arr[key] == ndl)
+			  //in just one for, in order to improve the performance 
+			  //deciding wich type of comparation will do before walk array
+			  if (strict) {
+			    for (key in haystack) {
+			      if (haystack[key] === needle) {
+			        return true;
+			      }
+			    }
+			  } else {
+			    for (key in haystack) {
+			      if (haystack[key] == needle) {
+			        return true;
+			      }
+			    }
+			  }
+			  return false;
+	},
+	/*
+  * Ajax
+  *
+  * @target 1 (功能性方法)
+  * @date 2014/09/02 09/48/48
+  */
+	postData : function(url, data, afterSuccess, afterFailure, then) {
+			if (!yiban.loading) {
+				afterSuccess = afterSuccess || yiban.noop;
+				afterFailure = afterFailure || yiban.noop;
+				then = then || false;
+				$.ajax({
+					url : baseUrl + url,
+					type : 'POST',
+					data : data,
+					dataType : 'json',
+					beforeSend : function(jqXHR, settings) {
+						yiban.loading = true;
+					},
+					success : function(response, textStatus, jqXHR) {
+						if (response.code === 200) {
+							if (then) {
+								yiban.loading = false;
+							}
+							afterSuccess(response);
+						} else {
+							if (response.code === 110) {
+								yiban.util.needLogin();
+							} else {
+								afterFailure(response);
+							}
+						}
+					},
+					error : function(jqXHR, textStatus, errorThrown) {
+						if (yiban.debug) {
+							yiban.log(jqXHR);
+						}
+					},
+					complete : function(jqXHR, textStatus) {
+						yiban.loading = false;
+					}
+				});
+			}
+	},
+	/*
+  * Ajax
+  *
+  * @target 1 (功能性方法)
+  * @date 2014/09/02 09/48/48
+  */
+	getData : function(url, data, afterSuccess, afterFailure) {
+			afterFailure = afterFailure || yiban.noop;
+			$.ajax({
+				url : baseUrl + url,
+				type : 'GET',
+				data : data,
+				dataType : 'json',
+				success : function(response, textStatus, jqXHR) {
+					if (response.code === 200) {
+						afterSuccess(response);
+					} else {
+						if (response.code === 110) {
+							yiban.util.needLogin();
+						} else {
+							afterFailure(response);
+						}
+					}
+				}
+			});
 	}
 };
