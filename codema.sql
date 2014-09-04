@@ -8,6 +8,8 @@ Date: 2014/8/29 18:34:26
 */
 
 SET FOREIGN_KEY_CHECKS=0;
+CREATE DATABASE codem;
+use codem;
 -- ----------------------------
 -- Table structure for blog
 -- ----------------------------
