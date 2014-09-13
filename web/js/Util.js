@@ -1,15 +1,41 @@
-var userAgent = navigator.userAgent.toLowerCase();
-
 var Tools = {
+  /*
+   *  version (判断是否为ie浏览器)
+   *
+   * @date 2014/09/13 16/06/48
+   */
   ie: /*@cc_on!@*/ false,
+  /*
+   * version (判断是否为ie6)
+   *
+   * @date 2014/09/13 16/06/48
+   */
   ie6: navigator.appVersion.indexOf("MSIE 6.0") != -1,
-  isWebkit: /applewebkit/.test(userAgent),
+  /*
+   * version (判断浏览器是否支持html5)
+   *
+   * @date 2014/09/13 16/06/48
+   */
+  isWebkit: function (argument) {
+    var userAgent = navigator.userAgent.toLowerCase();
+    return /applewebkit/.test(userAgent);
+  },
+  /*
+   * dom (根据id获取元素)
+   *
+   * @date 2014/09/13 16/06/48
+   */
   $: function(id, docObj) {
     if (!docObj) {
       var doc = document;
     }
     return doc.getElementById(id);
   },
+  /*
+   * Elment (根据类获取元素)
+   *
+   * @date 2014/09/13 16/06/48
+   */
   getElementsByClassName: function(obj, name) {
     var checkNode = function(node, cname, arr) {
       if (node.hasChildNodes()) {
@@ -29,36 +55,82 @@ var Tools = {
     checkNode(obj, name, arr);
     return arr;
   },
+  /*
+   * object (判断对象中成员是否为空)
+   *
+   * @date 2014/09/13 16/06/48
+   */
   isDefined: function(obj, field) {
     return typeof(obj[field]) != "undefined";
   },
+  /*
+   * function (判断是否为方法)
+   *
+   * @date 2014/09/13 16/06/48
+   */
   isFunction: function(obj) {
     return !!(obj && obj.constructor && obj.call && obj.apply);
   },
+  /*
+   * string (判断是否为字符串)
+   *
+   * @date 2014/09/13 16/06/48
+   */
   isString: function(str) {
     return (str && typeof(str) == 'string');
   },
+  /*
+   * object (判断是否为对象)
+   *
+   * @date 2014/09/13 16/06/48
+   */
   isObject: function(obj){
     return (obj && typeof(obj) == 'object');
   },
+  /*
+   * int (判断是否为数字)
+   *
+   * @date 2014/09/13 16/06/48
+   */
   isNumber: function(interget){
     return (interget && isNaN(interget));
   },
+  /*
+   * int (字符串转数字)
+   *
+   * @date 2014/09/13 16/06/48
+   */
   getNumber : function(value) {
     return value ? parseInt(value) : 0;
   },
+  /*
+   * Element (创建元素)
+   *
+   * @date 2014/09/13 16/06/48
+   */
   createElement: function(tName, docObj) {
     if (!docObj) {
       var doc = document;
     }
     return doc.createElement(tName);
   },
+  /*
+   * Element (为元素添加样式)
+   *
+   * @date 2014/09/13 16/06/48
+   */
   css: function(element, styles) {
     var style = element.style;
     for (var name in styles) {
       style[name] = styles[name];
     }
   },
+  /*
+   * Element (获取元素的位置)
+   *
+   * @arguments ele
+   * @date 2014/09/13 16/06/48
+   */
   getOffsetPosition: function(elem) {
     if (!elem) return {
       left: 0,
@@ -88,25 +160,59 @@ var Tools = {
       top: top
     };
   },
+  /*
+   * String (字符串去除空格)
+   *
+   * @input    str = ' 2122 323  23 '
+   * @output   str = '212232323 '
+   *
+   * @arguments str
+   * @date 2014/09/13 16/06/48
+   */
   trim: function(str) {
     return str.replace(/(^\s*)|(\s*$)/g, "");
   },
+  /*
+   * String (匹配子字符串)
+   *
+   * @date 2014/09/13 16/06/48
+   */
   contains: function(str1, str2) {
     //按小写匹配
     return str1.toLowerCase().indexOf(str2.toLowerCase()) > -1;
   },
+  /*
+   * class  (判断元素是否有该类)
+   *
+   * @date 2014/09/13 16/06/48
+   */
   hasClass: function(ele, cls) {
     return ele.className.match(new RegExp('(\\s|^)' + cls + '(\\s|$)'));
   },
+  /*
+   * class  (为元素添加类)
+   *
+   * @date 2014/09/13 16/06/48
+   */
   addClass: function(ele, cls) {
     if (!this.hasClass(ele, cls)) ele.className += " " + cls;
   },
+  /*
+   * class  (为元素删除类)
+   *
+   * @date 2014/09/13 16/06/48
+   */
   removeClass: function(ele, cls) {
     if (this.hasClass(ele, cls)) {
       var reg = new RegExp('(\\s|^)' + cls + '(\\s|$)');
       ele.className = ele.className.replace(reg, ' ');
     }
   },
+  /*
+   * obj  (复制对象)
+   *
+   * @date 2014/09/13 16/06/48
+   */
   mix: function(destination, sources) {
     for (k in sources) {
       if (sources[k] !== void 0) {
