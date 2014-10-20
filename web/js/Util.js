@@ -72,6 +72,14 @@ var Tools = {
     return !!(obj && obj.constructor && obj.call && obj.apply);
   },
   /*
+   * function (判断是否为数组)
+   *
+   * @date 2014/10/20 16/06/48
+   */
+  isArray:function(o){
+  	return Object.prototype.toString.call(o) === '[object Array]';
+  },
+  /*
    * string (判断是否为字符串)
    *
    * @date 2014/09/13 16/06/48
