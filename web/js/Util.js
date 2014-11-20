@@ -652,5 +652,21 @@ var Tools = {
 					}
 				}
 			});
-	}
+	},
+	/**
+	* 计算字符长度 字母、标点符号、数字长度为1，汉字为2
+	*/
+	countL:function(str){
+		var len = str.length;
+		var num = 0;
+		for(var i=0;i<len;i++){
+		var txt = str.charCodeAt(i);
+			if(txt>128){
+				num += 2;
+			}else{
+				num += 1;
+			}
+		}
+		return Math.ceil(num);
+	},
 };
