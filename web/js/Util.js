@@ -56,6 +56,26 @@ var Tools = {
     return arr;
   },
   /*
+   * array (获取子标签)
+   *
+   * @date 2014/12/26 16/06/48
+   */
+	findChildByTagName:function (parent,strTag){
+			var childNodes = parent.childNodes;
+			var tagName = '';
+			var targetTagName = strTag;
+			var targetNodes = [];
+			
+			for(var index in childNodes){
+				tagName = childNodes[index]['tagName'];
+				if(tagName == targetTagName.toUpperCase()){
+					targetNodes.push(childNodes[index]);
+				}
+			}
+			
+			return targetNodes;
+		},
+  /*
    * object (判断对象中成员是否为空)
    *
    * @date 2014/09/13 16/06/48
